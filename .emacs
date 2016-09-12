@@ -63,6 +63,37 @@
          (b-rank (my/org-sort-agenda-items-custom-rank b)))
     (my/org-sort-agenda-cmp a-rank b-rank)))
 
+(defun my/today-or-earlier (when)
+  (let* ((now (decode-time))
+         (end-of-day (encode-time 59
+                                  59
+                                  23
+                                  (nth 3 now)
+                                  (nth 4 now)
+                                  (nth 5 now)
+                                  (nth 8 now)))
+    )
+    (and when (time-less-p end-of-day when))))
+
+(defun my/org-time-past (point)
+  (let* ((deadline (org-get-deadline-time (point)))
+         (scheduled (org-get-scheduled-time (point))))
+     (cond
+       ((or (my/today-or-earlier deadline)
+            (my/today-or-earlier scheduled))
+         t)
+       (t
+        nil))))
+
+(defun org-init-skip-warning-for-tag (tag)
+  (let ((tags (org-get-tags-at (point))))
+    (when (and (member tag tags)
+               (my/org-time-past (point)))
+      (save-excursion (or (ignore-errors (org-forward-element)
+                                         (point))
+                          (point-max))))))
+
+(setq org-agenda-skip-function-global '(org-init-skip-warning-for-tag "hide"))
 (setq org-agenda-cmp-user-defined 'my/org-sort-agenda-items-user-defined)
 (setq org-agenda-sorting-strategy
 '((agenda time-up user-defined-down todo-state-down timestamp-up category-up)
