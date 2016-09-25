@@ -24,7 +24,7 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 
-(setq org-agenda-files (list "~/org/atl" "~/org/chris"))
+(setq org-agenda-files (list "~/org/chris"))
 (setq org-log-done t)
 (setq org-enforce-todo-dependencies t)
 (setq org-agenda-todo-ignore-timestamp 'future)
