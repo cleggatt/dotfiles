@@ -1,6 +1,14 @@
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(setq package-list '(package evil fill-column-indicator org))
+(setq package-archives '(("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
+
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+(require 'package)
 
 (add-to-list 'default-frame-alist '(height . 48))
 (add-to-list 'default-frame-alist '(width . 110))
@@ -90,7 +98,7 @@
     (search category-keep)))
 
 (setq org-todo-keywords
-  '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE(d)" "IN-JIRA(j)" "WONT-DO(o)")))
+  '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "TRACKED(k)" "WONT-DO(o)")))
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 (add-hook 'after-init-hook 'org-agenda-list)
